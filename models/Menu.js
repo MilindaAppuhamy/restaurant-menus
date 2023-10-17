@@ -1,7 +1,7 @@
 const { sequelize, DataTypes } = require("../db");
 const { Sequelize } = require("sequelize");
 
-const Menu = sequelize.define("Restaurant", {
+const Menu = sequelize.define("Menu", {
   title: DataTypes.STRING,
 });
 
