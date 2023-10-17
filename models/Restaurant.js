@@ -4,7 +4,7 @@ const { Sequelize } = require("sequelize");
 const Restaurant = sequelize.define("Restaurant", {
   name: DataTypes.STRING,
   location: DataTypes.STRING,
-  cusine: DataTypes.STRING,
+  cuisine: DataTypes.STRING,
 });
 
 module.exports = { Restaurant };
