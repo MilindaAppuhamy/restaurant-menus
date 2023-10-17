@@ -14,31 +14,47 @@ describe("Restaurant and Menu Models", () => {
   });
 
   test("can create a Restaurant", async () => {
-    const restaurant = await Restaurant.create({
-      name: "Pizzeria",
-      location: "Milan",
-      cuisine: "Italian",
-    });
-    expect(restaurant.name).toEqual("Pizzeria");
+    const restaurant = await Restaurant.create(seedRestaurant[0]);
+    expect(restaurant.name).toEqual("AppleBees");
+    expect(restaurant.location).toEqual("Texas");
+    expect(restaurant.cuisine).toEqual("FastFood");
   });
 
   test("can create a Menu", async () => {
-    // TODO - write test
-    expect("NO TEST").toEqual("EXPECTED DATA");
+    const menu = await Menu.create(seedMenu[0]);
+    expect(menu.title).toEqual("Breakfast");
   });
 
   test("can find Restaurants", async () => {
-    // TODO - write test
-    expect("NO TEST").toEqual("EXPECTED DATA");
+    await Restaurant.create(seedRestaurant[1]);
+    const result = await Restaurant.findAll({
+      where: {
+        name: "LittleSheep",
+      },
+    });
+    expect(result[0].name).toEqual("LittleSheep");
+    expect(result[0].location).toEqual("Dallas");
+    expect(result[0].cuisine).toEqual("Hotpot");
   });
 
   test("can find Menus", async () => {
-    // TODO - write test
-    expect("NO TEST").toEqual("EXPECTED DATA");
+    await Menu.create(seedMenu[1]);
+    const result = await Menu.findAll({
+      where: {
+        title: "Lunch",
+      },
+    });
+    expect(result[0].title).toEqual("Lunch");
   });
 
   test("can delete Restaurants", async () => {
-    // TODO - write test
-    expect("NO TEST").toEqual("EXPECTED DATA");
+    await Restaurant.create(seedRestaurant[2]);
+    const result = await Restaurant.findAll({
+      where: {
+        cuisine: "Indian",
+      },
+    });
+    const deleted = await result[0].destroy();
+    expect(result[0]).toEqual(deleted);
   });
 });
