@@ -88,3 +88,43 @@ describe("Restaurant and Menu Models", () => {
     expect(deleted).toEqual(item);
   });
 });
+
+describe("eager loading tests", () => {
+  beforeAll(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  test("can query menus from item as author", async () => {
+    const item1 = await Item.create(seedItem[0]);
+    const item2 = await Item.create(seedItem[1]);
+    const menu1 = await Menu.create(seedMenu[0]);
+    const menu2 = await Menu.create(seedMenu[1]);
+    const menu3 = await Menu.create(seedMenu[2]);
+    const menu4 = await Menu.create(seedMenu[3]);
+    await item1.setMenus([menu1, menu2]);
+    await item2.setMenus([menu3, menu4]);
+
+    const itemsInMenus = await Item.findAll({
+      include: [{ model: Menu, as: "Menus" }],
+    });
+    //console.log(JSON.stringify(itemsInMenus, null, 2));
+    expect(itemsInMenus.length).toBe(2);
+  });
+
+  test("can query menus from item as author", async () => {
+    const menu1 = await Menu.findByPk(1);
+    const menu2 = await Menu.findByPk(2);
+    const item1 = await Item.findByPk(1);
+    const item2 = await Item.findByPk(2);
+    const item3 = await Item.create(seedItem[2]);
+
+    await menu1.setItems([item1, item2]);
+    await menu2.setItems([item1, item2, item3]);
+
+    const menusWithItem = await Menu.findAll({
+      include: [{ model: Item, as: "Items" }],
+    });
+    //console.log(JSON.stringify(menusWithItem, null, 2));
+    expect(menusWithItem.length).toBe(4);
+  });
+});
