@@ -1,6 +1,6 @@
 const { sequelize } = require("./db");
-const { Restaurant, Menu } = require("./models/index");
-const { seedRestaurant, seedMenu } = require("./seedData");
+const { Restaurant, Menu, Item } = require("./models/index");
+const { seedRestaurant, seedMenu, seedItem } = require("./seedData");
 
 describe("Restaurant and Menu Models", () => {
   /**
@@ -56,5 +56,35 @@ describe("Restaurant and Menu Models", () => {
     });
     const deleted = await result[0].destroy();
     expect(result[0]).toEqual(deleted);
+  });
+
+  test("can create an Item", async () => {
+    const item = await Item.create(seedItem[0]);
+    expect(item.name).toEqual("bhindi masala");
+    expect(item.image).toEqual("someimage.jpg");
+    expect(item.price).toEqual(9.5);
+    expect(item.vegetarian).toEqual(true);
+  });
+
+  test("can find an Item", async () => {
+    const item = await Item.findByPk(1);
+    expect(item.name).toEqual("bhindi masala");
+    expect(item.image).toEqual("someimage.jpg");
+    expect(item.price).toEqual(9.5);
+    expect(item.vegetarian).toEqual(true);
+  });
+
+  test("can update an Item", async () => {
+    const item = await Item.findByPk(1);
+    await item.update({
+      name: "McPlant",
+    });
+    expect(item.name).toEqual("McPlant");
+  });
+
+  test("can delete an Item", async () => {
+    const item = await Item.findByPk(1);
+    const deleted = await item.destroy();
+    expect(deleted).toEqual(item);
   });
 });
